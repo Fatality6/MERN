@@ -12,7 +12,7 @@ export const checkAuth = (req, res, next) => {
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
             //затем к req добавляем новое свойство userId содержащее реальный id пользователя
             req.userId = decoded.id
-            //метод next завершает работу данного middleware
+            //метод next завершает работу данного middleware и запускает следующий контроллер в очереди endpoint`a
             next()
         } catch (error) {
             return res.json({message: 'Нет доступа'})

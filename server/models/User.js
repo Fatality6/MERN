@@ -1,9 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 
+//Схема для создания нового пользователя
 const UserSchema = new mongoose.Schema(
     {
         username: {
-            type: String,
+            type: String, 
             required: true,
             unique: true
         },
@@ -13,11 +14,13 @@ const UserSchema = new mongoose.Schema(
         },
         posts: [
             {
-                type: mongoose.Schema.Types.ObjectId,
+                //для постов подключается другая схема
+                type: mongoose.Schema.Types.ObjectId, 
                 ref: 'Post'
             }
         ]
     },
+    //для создания временных меток в будущих постах добавляем timestamps
     { timestamps: true }
 )
 

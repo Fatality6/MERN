@@ -29,6 +29,15 @@ export const register = async (req,res) => {
             username,
             password: hash
         })
+
+        //создаём токен используя jsonwebtoken шифруя id из БД и используя ключ из .env
+        //expiresIn:'30d' это время жизненного цикла токена
+        const token = jwt.sign(
+            {id: newUser._id},
+            process.env.JWT_SECRET,
+            {expiresIn:'30d'}
+        )
+
         //сохраняем нового пользователя в БД
         await newUser.save()
         //возвращаем пользователю ответ

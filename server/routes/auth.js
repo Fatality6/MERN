@@ -1,6 +1,8 @@
 import { Router } from "express"
 import { getMe, login, register } from "../controllers/auth.js"
+import { checkAuth } from "../utils/chechAuth.js"
 
+//создаём endpointы и при выполнении на них запроса вызываем нужный котроллер или midlware
 const router = new Router()
 
 //Register
@@ -10,6 +12,6 @@ router.post('/register', register)
 router.post('/login', login)
 
 //Get me
-router.get('/me', getMe)
+router.get('/me',checkAuth, getMe)
 
 export default router
