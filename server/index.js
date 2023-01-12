@@ -3,6 +3,9 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import authRoute from './routes/auth.js'
+import postRoute from './routes/posts.js'
+import fileUpload from 'express-fileupload'
+
 
 //создаём приложение express
 const app = express()
@@ -24,9 +27,15 @@ const DB_NAME = process.env.DB_NAME
 app.use(cors())
 // встроенный посредник, разбирающий входящие запросы в объект в формате JSON.
 app.use(express.json())
+//middleware для обработки файлов
+app.use(fileUpload())
+//указываем папку для статических файлов
+app.use(express.static('uploads'))
+
 
 // Routes
 app.use('/api/auth', authRoute)
+app.use('/api/posts', postRoute)
 
 //объявляем асинхронную функцию start, которая будет запускать приложение express
 async function start() {

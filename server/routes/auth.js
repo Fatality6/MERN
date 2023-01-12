@@ -6,6 +6,7 @@ import { checkAuth } from "../utils/chechAuth.js"
 const router = new Router()
 
 //Register
+//http://localhost:8080/api/register
 router.post('/register', register)
 
 //Login
