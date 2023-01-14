@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import authRoute from './routes/auth.js'
 import postRoute from './routes/posts.js'
+import commentRoute from './routes/comments.js'
 import fileUpload from 'express-fileupload'
 
 
@@ -36,6 +37,7 @@ app.use(express.static('uploads'))
 // Routes
 app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
+app.use('/api/comments', commentRoute)
 
 //объявляем асинхронную функцию start, которая будет запускать приложение express
 async function start() {

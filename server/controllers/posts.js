@@ -1,5 +1,6 @@
 import Post from '../models/Post.js'
 import User from '../models/User.js'
+import Comment from '../models/Comment.js'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url' 
 
@@ -115,16 +116,75 @@ export const getMyPosts = async( req, res ) => {
     }
 }
 
+//Редактировать пост
+export const updatePost = async( req, res ) => {
+    try {
+        //получаем из req.body title, text, id
+       const { title, text, id} = req.body
+
+       //находим пост по id
+       const post = await Post.findById(id)
+
+        //если в запросе есть фаил картинки
+        if (req.files) {
+            //формируем имя файла из даты и имени файла
+            let fileName = Date.now().toString() + req.files.image.name
+
+            //получаем путь к данному файлу
+            const __dirname = dirname(fileURLToPath(import.meta.url))
+
+            //перемещаем фаил в папку uploads
+            req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
+
+            //изменяем адрес картинки поста
+            post.imgUrl = fileName || ''
+        }
+
+        //изменяем заголовок и текст поста
+        post.title = title
+        post.text = text 
+
+        // сохраняем изменения в БД
+        await post.save()
+
+        //возвращаем пост
+        res.json(post)
+    } catch (error) {
+        res.json({message: 'Что-то пошло не так'})
+    }
+}
+
 //Удалить пост
 export const removePost = async( req, res ) => {
     try {
-        // ищем пост по ID и инкрементируем свойство views на 1
+        // ищем пост по ID и удаляем его
         const post = await Post.findByIdAndDelete(req.params.id)
+        //если поста нет возвращаем сообщение
         if(!post) res.json({message: 'Такого поста не существует'})
+        //если есть ищем пользователя и удаляем из его постов id поста
         await User.findByIdAndUpdate(req.userId,{
             $pull: { posts: req.params.id}
         })
+        //возвращаем сообщение
         res.json({message: 'Пост удалён'})
+    } catch (error) {
+        res.json({message: 'Что-то пошло не так', id: `${req.params.id}`})
+    }
+}
+
+//Найти комментарии к посту
+export const getPostComments = async ( req, res ) => {
+    try {
+        //ищем пост по id из адресной строки 
+        const post = await Post.findById(req.params.id)
+        //создаём массив id комментариев
+        const list = await Promise.all(
+            post.comments.map((comment) => {
+                return Comment.findById(comment)
+            })
+        )
+        //возвращаем массив id комментариев
+        res.json(list)
     } catch (error) {
         res.json({message: 'Что-то пошло не так'})
     }
