@@ -5,16 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getMyPosts } from "../redux/features/post/postSlice"
 
 export const MyWorks = () => {
-    /* const [posts, setPosts] = useState([])
 
-    const fetchMyPosts = async () => {
-        try {
-            const { data } = await axios.get('posts/user/me')
-            setPosts(data)
-        } catch (error) {
-            console.log(error)
-        }
-    } */
     const dispatch = useDispatch()
     const { myPosts } = useSelector((state) => state.post)
     
