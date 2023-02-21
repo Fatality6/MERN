@@ -2,7 +2,8 @@ import Post from '../models/Post.js'
 import User from '../models/User.js'
 import Comment from '../models/Comment.js'
 import path, { dirname } from 'path'
-import { fileURLToPath } from 'url' 
+import { fileURLToPath } from 'url'
+import fs from 'fs'
 
 //Создать пост
 export const createPost = async( req, res ) => {
@@ -165,6 +166,14 @@ export const removePost = async( req, res ) => {
         await User.findByIdAndUpdate(req.userId,{
             $pull: { posts: req.params.id}
         })
+        //если в посте есть картинка, то удаляем её из папки uploads
+        if (post.imgUrl) {
+            const __dirname = dirname(fileURLToPath(import.meta.url))
+            const imagePath = path.join(__dirname, '..', 'uploads', post.imgUrl)
+            fs.unlink(imagePath, err => {
+                if(err)console.log(err)
+            })
+          }
         //возвращаем сообщение
         res.json({message: 'Пост удалён'})
     } catch (error) {

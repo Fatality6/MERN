@@ -22,16 +22,16 @@ export const CommentItem = ({ cmt, post }) => {
 }
 
   return (
-    <div className='flex items-center justify-between gap-3'>
+    <div className='flex items-center justify-start gap-3 min-w-full max-w-full'>
       <div className="flex items-center justify-center shrink-0 rounded-full w-10 h-10 bg-blue-300 text-sm">
         {avatar}
       </div>
-      <div className="flex text-gray-300 text-sm">{cmt.comment}</div>
+      <div className="flex text-gray-300 text-[12px] max-w-full">{cmt.comment}</div>
       {user?._id === post.author && (
         <div className='flex gap-3 mt-4'>
           <button
             onClick={removePostHandler}
-            className='flex items-center justify-center gap-2  text-white opacity-50'
+            className='transition-all flex justify-end gap-2 pb-4 text-white opacity-10 hover:opacity-50 hover:transition-all'
           >
             <AiFillDelete />
           </button>
